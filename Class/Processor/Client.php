@@ -41,7 +41,6 @@ class Client
     public function getSolution($id)
     {
         $url = "http://www.1c.ru/rus/partners/solutions/solution.jsp?SolutionID={$id}";
-//        $url = "http://38studio01.dev/import/solution01.htm";
         return $this->getResponse($url);
     }
 

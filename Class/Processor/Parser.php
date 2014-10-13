@@ -41,6 +41,19 @@ class Parser
         return $links;
     }
 
+    public function prepareHtml($text)
+    {
+        return preg_replace('/^\s+|\n|\r|\s+| +$/m', ' ', $text);
+    }
+
+    public function parseSolutionsListPagination($text)
+    {
+        if (preg_match('~parts=(\d+?)[\'\"]{1}>&nbsp;&raquo;&raquo;<\/a>~', $text, $matches)) {
+            return (integer)$matches[1];
+        }
+        return null;
+    }
+
     public function getTypeSolution($text)
     {
         if (preg_match('~Внедренное типовое решение:<\/b><\/td> <td>(.+?)<\/td>~', $text, $matches)) {
@@ -287,7 +300,7 @@ class Parser
         $content = $dom->find("table#mainBodyTable td[height=100%]", 0);
         $table = $content->find("table[height=100%]", 0);
         $mainDom = $table->find("td", 4);
-        $mainData = preg_replace('/^\s+|\n|\r|\s+| +$/m', ' ', $mainDom);
+        $mainData = $this->prepareHtml($mainDom);
 //        echo $mainData;
 
         $data["typeSolution"] = $this->getTypeSolution($mainData);

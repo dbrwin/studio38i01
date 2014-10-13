@@ -13,6 +13,12 @@
 
 <div class="container body">
     <div class="row">
+        <div class="col-lg-12">
+            <a class="btn btn-primary <?php if($currentType===1):?>active<?php endif; ?>" <?php if($currentType===1):?>disabled="disabled"<?php endif; ?> href="/?t=1">Стандартное внедрение</a>
+            <a class="btn btn-primary <?php if($currentType===2):?>active<?php endif; ?>" <?php if($currentType===2):?>disabled="disabled"<?php endif; ?> href="/?t=2">Проектное внедрение</a>
+        </div>
+    </div>
+    <div class="row">
         <article class="col-lg-12 col-md-12">
             <table class="table table-responsive">
                 <thead>
@@ -38,10 +44,23 @@
                 <?php endforeach; ?>
                 </tbody>
             </table>
-
+            <?php if(isset($currentPage) && isset($maxPages)):?>
+                <hr/>
+                <ul class="pagination pagination-sm">
+                    <?php for($i=1; $i<=$maxPages; $i++):?>
+                        <?php if($i!==$currentPage):?>
+                            <li><a href="/?t=<?=$currentType;?>&p=<?=$i;?>"><?=$i;?></a></li>
+                        <?php else:?>
+                            <li class="active"><span><?=$i;?></span></li>
+                        <?php endif;?>
+                    <?php endfor;?>
+                </ul>
+            <?php endif;?>
         </article>
     </div>
 </div>
+
+<br/>
 
 <footer class="row">
     <div class="col-md-3 pull-right">
