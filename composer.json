@@ -13,6 +13,7 @@
         }
     },
     "require": {
-        "sunra/php-simple-html-dom-parser": "v1.5.0"
+        "sunra/php-simple-html-dom-parser": "1.5",
+        "deltaphp/dtpl": "dev-master"
     }
 }

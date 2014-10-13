@@ -22,10 +22,18 @@ $raw = $client->getSolutionsList($type, $page);
 $parser = new \Processor\Parser();
 $solutionsLinks = $parser->parseSolutionsLinks($raw);
 
+
+$solutions = [];
 foreach($solutionsLinks as $linkId) {
     $solutionRaw = $client->getSolution($linkId);
     $info = $parser->parseSolution($solutionRaw);
-    var_dump($info);
+    $solutions[] = $info;
 }
 
 $view = new \Processor\View();
+$view->assign("solutions", $solutions);
+$html = $view->render("list");
+echo $html;
+
+
+

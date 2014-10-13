@@ -1,0 +1,19 @@
+{
+    "name": "orbisnull/studio38i01",
+    "version": "0.1.0",
+    "authors": [
+        "orbisnull <zen4dev@gmail.com>"
+    ],
+    "license": "proprietary",
+    "private": true,
+    "ignore": [
+        "**/.*",
+        "node_modules",
+        "bower_components",
+        "test",
+        "tests"
+    ],
+    "dependencies": {
+        "bootstrap": "3.2.x"
+    }
+}

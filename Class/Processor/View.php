@@ -6,7 +6,12 @@
 namespace Processor;
 
 
-class View 
+class View extends \dTpl\View
 {
+    public function getConfig()
+    {
+        return ["templateDirs" => ["templates"]];
+    }
+
 
 } 
