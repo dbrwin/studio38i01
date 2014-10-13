@@ -43,7 +43,7 @@ class Parser
 
     public function getTypeSolution($text)
     {
-        if (preg_match('~Внедренное типовое решение:</b></td> <td>(.+?)</td>~', $text, $matches)) {
+        if (preg_match('~Внедренное типовое решение:<\/b><\/td> <td>(.+?)<\/td>~', $text, $matches)) {
             return trim($matches[1]);
         }
         return false;
@@ -115,7 +115,7 @@ class Parser
 
     public function getIndustry($text)
     {
-        if (preg_match('~Отрасли:</b></td> <td>(.+?)</td>~', $text, $matches)) {
+        if (preg_match('~Отрасли:<\/b><\/td> <td>(.+?)<\/td>~', $text, $matches)) {
             $matches = explode("&gt;&gt;", $matches[1]);
             foreach ($matches as $key => $value) {
                 $matches[$key] = trim($value);
@@ -128,25 +128,27 @@ class Parser
 
     public function getOrganization($text)
     {
-        if (preg_match('~<h3>Внедрение</h3> <p>(.+?)</p> <p>(.+?)</p>~', $text, $matches)) {
-            array_shift($matches);
-            foreach ($matches as $key => $value) {
-                $matches[$key] = trim(strip_tags($value));
-            }
-            $matches[1] = explode(",", $matches[1]);
-
-            return [
-                "organization" => $matches[0],
-                "city"         => trim($matches[1][0]),
-                "date"         => trim($matches[1][1]),
-            ];
+        $data = [
+            "organization" => null,
+            "city"         => null,
+            "date"         => null,
+        ];
+        if (preg_match('~<h3>Внедрение</h3> <p>(.+?)<\/p>~', $text, $matches)) {
+            $data["organization"] = trim(strip_tags($matches[1]));
         }
-        return false;
+        if (preg_match('~<h3>Внедрение<\/h3>(.+)<p>(.+),+\s+(.+?[0-9]{4})+\s?<\/p>~', $text, $matches)) {
+            $city = trim(strip_tags($matches[2]));
+            $city = explode(" ", $city);
+            $city = end($city);
+            $data["city"] = $city;
+            $data["date"] = trim(strip_tags($matches[3]));
+        }
+        return $data;
     }
 
     public function getArmCount($text)
     {
-        if (preg_match('~<p>Общее число автоматизированных рабочих мест: <b>([0-9]+)</b>~', $text, $matches)) {
+        if (preg_match('~<p>Общее число автоматизированных рабочих мест: <b>([0-9]+)<\/b>~', $text, $matches)) {
             return trim($matches[1]);
         }
         return false;
