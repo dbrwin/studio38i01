@@ -136,6 +136,7 @@ class Parser
         if (preg_match('~<h3>Внедрение</h3> <p>(.+?)<\/p>~', $text, $matches)) {
             $data["organization"] = trim(strip_tags($matches[1]));
         }
+        // http://regex101.com/r/qB5vI8/2
         if (preg_match('~<h3>Внедрение<\/h3>(.+)<p>(.+),+\s+(.+?[0-9]{4})+\s?<\/p>~', $text, $matches)) {
             $city = trim(strip_tags($matches[2]));
             $city = explode(" ", $city);

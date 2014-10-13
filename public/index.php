@@ -13,8 +13,11 @@ function get_last_retrieve_url_contents_content_type () {
 }
 
 $client = new \Processor\Client();
-$raw = $client->getSolutionsList();
 
+$type = isset($_GET["t"]) ? (integer) $_GET["t"] : 1;
+$page = isset($_GET["p"]) ? (integer) $_GET["p"] : 1;
+
+$raw = $client->getSolutionsList($type, $page);
 
 $parser = new \Processor\Parser();
 $solutionsLinks = $parser->parseSolutionsLinks($raw);
