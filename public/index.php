@@ -5,6 +5,9 @@ ini_set("display_errors", 0);
 
 header("Content-type: text/html; charset=utf-8");
 
+include_once "../vendor/orbisnull/xhproflib/src/XHProfLib/XHProfLib.php";
+\XHProfLib\XHProfiler::start('studio38i01');
+
 define("ROOT_DIR", realpath("../"));
 $loader = require '../vendor/autoload.php';
 

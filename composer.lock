@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "a25c3f2f6cf045e6a80f164d4612fc6c",
+    "hash": "1c8fea74ffd24d6c37696fcb2a936b03",
     "packages": [
         {
             "name": "deltaphp/dtpl",
@@ -38,6 +38,36 @@
             ],
             "description": "small base template engine",
             "time": "2014-03-23 05:01:10"
+        },
+        {
+            "name": "orbisnull/xhproflib",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/orbisnull/xhproflib.git",
+                "reference": "8010e6ecf3b278149e3ee28f281c6e194fce3662"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/orbisnull/xhproflib/zipball/8010e6ecf3b278149e3ee28f281c6e194fce3662",
+                "reference": "8010e6ecf3b278149e3ee28f281c6e194fce3662",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "XHProfLib": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-3.0+"
+            ],
+            "description": "XHProf profiler libs for frameworks",
+            "time": "2013-12-26 04:55:28"
         },
         {
             "name": "sunra/php-simple-html-dom-parser",
@@ -87,7 +117,8 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "deltaphp/dtpl": 20
+        "deltaphp/dtpl": 20,
+        "orbisnull/xhproflib": 20
     },
     "prefer-stable": false,
     "platform": [],

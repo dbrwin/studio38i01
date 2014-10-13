@@ -14,6 +14,7 @@
     },
     "require": {
         "sunra/php-simple-html-dom-parser": "1.5",
-        "deltaphp/dtpl": "dev-master"
+        "deltaphp/dtpl": "dev-master",
+        "orbisnull/xhproflib": "dev-master"
     }
 }
