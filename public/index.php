@@ -23,7 +23,6 @@ foreach($solutionsLinks as $linkId) {
     $solutionRaw = $client->getSolution($linkId);
     $info = $parser->parseSolution($solutionRaw);
     var_dump($info);
-    break;
 }
 
 $view = new \Processor\View();
