@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <title>List Solutions</title>
+    <base href="/">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="static/lib/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="static/lib/bootstrap/dist/css/bootstrap-theme.css">
+
+    <?php if($nextPage):?>
+    <meta http-equiv="refresh" content="0; url=/parser.php?t=<? echo $currentType;?>&p=<? echo $nextPage;?>" />
+    <?php endif;?>
+
+</head>
+<body>
+
+
+<div class="container body">
+    <div class="row">
+        <div class="col-lg-12">
+            <button class="btn btn-default <?php if($currentType===1):?>btn-success<?php endif;?>"> Стандартное внедрение</button>
+            <button class="btn btn-default <?php if($currentType===2):?>btn-success<?php endif;?>"> Проектное внедрение</button>
+        </div>
+    </div>
+    <div class="row">
+        <article class="col-lg-12 col-md-12">
+            <br/>
+            <pre>
+                <?php
+                    echo "Count :" . $solutionsCount;
+
+
+                ?>
+
+            </pre>
+
+
+            <br/>
+
+            <hr/>
+
+            <?php if(isset($currentPage) && isset($maxPages)):?>
+                <hr/>
+                <ul class="pagination pagination-sm">
+                    <?php for($i=1; $i<=$maxPages; $i++):?>
+                        <?php if($i!==$currentPage):?>
+                            <li><?=$i;?></li>
+                        <?php else:?>
+                            <li class="active"><span><?=$i;?></span></li>
+                        <?php endif;?>
+                    <?php endfor;?>
+                </ul>
+            <?php endif;?>
+        </article>
+    </div>
+</div>
+
+<br/>
+
+<footer class="row">
+    <div class="col-md-3 pull-right">
+        <p>© 2014 <a href="https://github.com/orbisnull">orbisnull</a></p>
+    </div>
+</footer>
+
+
+</body>
+</html>

@@ -146,6 +146,12 @@ class Parser
         return false;
     }
 
+    public function changeIndustry($htmlStr, $industry)
+    {
+        $result = preg_replace('/(<tr.+?Отрасли:.+?)(<td.+>).+?(<\/tr>)/s', '$1'.'<td>'.$industry.'</td>'.'$3', $htmlStr);
+        return $result;
+    }
+
 
     public function getOrganization($text)
     {
@@ -299,6 +305,20 @@ class Parser
         }
     }
 
+    public function changeFunctions($htmlStr, $functions)
+    {
+        $result = preg_replace('/(<h3>Автоматизированы следующие функции:<\/h3>\s*<ul>)(.+?)(\s*<\/ul>\s*<h3>)/s', '$1'.'<li>'.$functions.'</li>'.'$3', $htmlStr);
+        return $result;
+    }
+
+    public function getText($htmlStr, $industry, $functions)
+    {
+        $htmlStr = preg_replace("/<tr.+?Партнер, осуществивший внедрение\/проект.+?<\/tr>/s", "", $htmlStr);
+        $htmlStr = $this->changeIndustry($htmlStr, $industry);
+        $htmlStr = $this->changeFunctions($htmlStr, $functions);
+        return $htmlStr;
+    }
+
     public function parseSolution($htmlStr)
     {
         $dom = $this->getDom($htmlStr);
@@ -309,17 +329,19 @@ class Parser
         $table = $content->find("table[height=100%]", 0);
         $mainDom = $table->find("td", 4);
         $mainData = $this->prepareHtml($mainDom);
-//        echo $mainData;
 
-        $data["typeSolution"] = $this->getTypeSolution($mainData);
-        $data["industry"] = $this->getIndustry($mainData);
+        $solution = new Solution();
+        $solution->setType($this->getTypeSolution($mainData));
+        $solution->setIndustry($this->getIndustry($mainData));
         $dataOrg = $this->getOrganization($mainData);
-        $data["organization"] = $dataOrg["organization"];
-        $data["city"] = $dataOrg["city"];
-        $data["date"] = $dataOrg["date"];
-        $data["armCount"] = $this->getArmCount($mainData);
-        $data["functions"] = $this->getFunctions($mainDom);
-        return $data;
+        $solution->setOrganization($dataOrg["organization"]);
+        $solution->setCity($dataOrg["city"]);
+        $solution->setDate($dataOrg["date"]);
+        $solution->setArms($this->getArmCount($mainData));
+        $solution->setFunctions($this->getFunctions($mainDom));
+        $text = $this->getText($mainData, $solution->getIndustry(), $solution->getFunctions());
+        $solution->setText($text);
+        return $solution;
     }
 
 } 
