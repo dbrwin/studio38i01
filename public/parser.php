@@ -16,7 +16,7 @@ function get_last_retrieve_url_contents_content_type()
 $type = isset($_GET["t"]) ? (integer)$_GET["t"] : 1;
 $page = isset($_GET["p"]) ? (integer)$_GET["p"] : 1;
 
-\DeltaDb\DbaStorage::setDefault(function() {
+\DeltaDb\DbaStorage::setDefault(function () {
     $dbAdapter = new \DeltaDb\Adapter\MysqlPdoAdapter();
     $dbAdapter->connect('mysql:host=localhost;dbname=38studio', ["password" => "123"]);
     return $dbAdapter;
@@ -26,6 +26,7 @@ try {
     $client = new \Processor\Client();
     $raw = $client->getSolutionsList($type, $page);
     $parser = new \Processor\Parser();
+    $parser->setHttpClient($client);
     $solutionsLinks = $parser->parseSolutionsLinks($raw);
     $maxPages = $parser->parseSolutionsListPagination($parser->prepareHtml($raw));
     $nextPage = ($page + 1) <= $maxPages ? ($page + 1) : null;
@@ -33,7 +34,7 @@ try {
     $storage = new \Processor\StorageMysql();
 
     foreach ($solutionsLinks as $linkId) {
-        $solution = $storage->findOne(["linkid" => (integer) $linkId]);
+        $solution = $storage->findOne(["linkid" => (integer)$linkId]);
         if ($solution) {
             continue;
         }
@@ -45,28 +46,37 @@ try {
         $solution->setLinkid($linkId);
         $solution->setGroup($type);
         $solution->setRaw($solutionRaw);
+
+        $reviewRaw = $client->getResponse($linkId);
+        if ($reviewRaw) {
+            $review = $parser->parseReview($reviewRaw, $linkId);
+        }
+        if (isset($review) && $review) {
+            $solution->setReview($review);
+        }
         $storage->save($solution);
     }
+
+    $view = new \Processor\View();
+    $view->setTemplateExtension("phtml");
+    $view->assign("currentPage", $page);
+    $view->assign("maxPages", $maxPages);
+    $view->assign("currentType", $type);
+    $view->assign("nextPage", $nextPage);
+    $solutionsCount = $storage->count(["group" => (integer)$type]);
+    $view->assign("solutionsCount", $solutionsCount);
+
+    if ($nextPage) {
+        $html = $view->render("parser-work");
+    } else {
+        $html = $view->render("parser-report");
+    }
+    echo $html;
 } catch (\Exception $e) {
-    header( "Location: /parser.php?t={$type}&p={$page}");
-    http_response_code(500);
+    header("Location: /parser.php?t={$type}&p={$page}");
     echo "<h1>Error</h1> \n";
     var_dump($e);
 }
 
-$view = new \Processor\View();
-$view->setTemplateExtension("phtml");
-$view->assign("currentPage", $page);
-$view->assign("maxPages", $maxPages);
-$view->assign("currentType", $type);
-$view->assign("nextPage", $nextPage);
-$solutionsCount = $storage->count(["group" => (integer) $type]);
-$view->assign("solutionsCount", $solutionsCount);
 
-if ($nextPage) {
-    $html = $view->render("parser-work");
-} else {
-    $html = $view->render("parser-report");
-}
-echo $html;
 

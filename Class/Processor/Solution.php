@@ -21,7 +21,7 @@ class Solution extends AbstractEntity implements EntityInterface
     protected $arms;
     protected $date;
     protected $text;
-    protected $reviews;
+    protected $reviewtext;
     protected $revdocs;
     protected $raw;
 
@@ -188,17 +188,17 @@ class Solution extends AbstractEntity implements EntityInterface
     /**
      * @return mixed
      */
-    public function getReviews()
+    public function getReviewtext()
     {
-        return $this->reviews;
+        return $this->reviewtext;
     }
 
     /**
      * @param mixed $reviews
      */
-    public function setReviews($reviews)
+    public function setReviewText($reviews)
     {
-        $this->reviews = $reviews;
+        $this->reviewtext = $reviews;
     }
 
     /**
@@ -231,6 +231,12 @@ class Solution extends AbstractEntity implements EntityInterface
     public function setRaw($raw)
     {
         $this->raw = $raw;
+    }
+
+    public function setReview(Review $review)
+    {
+        $this->setReviewtext($review->getText());
+        $this->setRevdocs($review->getFiles());
     }
 
 }

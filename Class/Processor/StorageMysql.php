@@ -6,6 +6,7 @@
 namespace Processor;
 
 
+use DeltaDb\EntityInterface;
 use DeltaDb\Repository;
 
 class StorageMysql extends Repository
@@ -26,11 +27,21 @@ class StorageMysql extends Repository
                 "arms",
                 "date",
                 "text",
-                "reviews",
+                "reviewtext",
                 "revdocs",
                 "raw"
             ]
         ],
     ];
+
+    public function reserve(EntityInterface $entity)
+    {
+        $data = parent::reserve($entity);
+        if (isset($data["fields"]["revdocs"]) && is_array($data["fields"]["revdocs"])) {
+            $data["fields"]["revdocs"] = serialize($data["fields"]["revdocs"]);
+        }
+        return $data;
+    }
+
 
 } 

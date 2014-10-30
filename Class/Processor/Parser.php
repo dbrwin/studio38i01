@@ -10,6 +10,24 @@ use simple_html_dom;
 
 class Parser
 {
+    protected $httpClient;
+
+    /**
+     * @return Client
+     */
+    public function getHttpClient()
+    {
+        return $this->httpClient;
+    }
+
+    /**
+     * @param mixed $httpClient
+     */
+    public function setHttpClient($httpClient)
+    {
+        $this->httpClient = $httpClient;
+    }
+
     /**
      * @param $htmlStr
      * @return \simple_html_dom
@@ -43,7 +61,7 @@ class Parser
 
     public function prepareHtml($text)
     {
-        return preg_replace('/^\s+|\n|\r|\s+| +$/m', ' ', $text);
+        return preg_replace('/^\s+|\n|\r|\s+| +$/s', ' ', $text);
     }
 
     public function parseSolutionsListPagination($text)
@@ -301,7 +319,6 @@ class Parser
                 break;
             default :
                 return null;
-
         }
     }
 
@@ -342,6 +359,26 @@ class Parser
         $text = $this->getText($mainData, $solution->getIndustry(), $solution->getFunctions());
         $solution->setText($text);
         return $solution;
+    }
+
+    public function parseReview($htmlStr, $solutionId)
+    {
+        $htmlStr = $this->prepareHtml($htmlStr);
+        $review = new Review();
+        if (preg_match('/(<img[^<|>]*(\/home\/www\/www.1c.ru\/rus\/partners\/solutions\/responses).*<\/div>.*)(<p.*)(<p>\s+<\!.+1x1\.gif)/U', $htmlStr, $matches)) {
+            $review->setText($matches[3]);
+        }
+        if (preg_match_all('/(<img[^<]*name=\S(\/home\/www\/www.1c.ru\/rus\/partners\/solutions\/responses\/[\w\/\.\-\_]+))/', $htmlStr, $matches, PREG_PATTERN_ORDER)) {
+            $client = $this->getHttpClient();
+            foreach($matches[2] as $num=>$url) {
+                $url = "http://www.1c.ru" . $url;
+                $num = $num+1;
+                $file = $client->saveFile($url, "review-{$solutionId}-{$num}");
+                $file = strtolower($file);
+                $review->addFile($file);
+            }
+        }
+        return $review;
     }
 
 } 
