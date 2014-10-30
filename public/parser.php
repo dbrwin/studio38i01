@@ -33,7 +33,7 @@ try {
 
     $storage = new \Processor\StorageMysql();
 
-    foreach ($solutionsLinks as $linkId) {
+    foreach ($solutionsLinks as $num => $linkId) {
         $solution = $storage->findOne(["linkid" => (integer)$linkId]);
         if ($solution) {
             continue;
@@ -50,11 +50,14 @@ try {
         $reviewRaw = $client->getResponse($linkId);
         if ($reviewRaw) {
             $review = $parser->parseReview($reviewRaw, $linkId);
+            if ($review) {
+                $solution->setReview($review);
+            }
         }
-        if (isset($review) && $review) {
-            $solution->setReview($review);
+        $saveResult = $storage->save($solution);
+        if (!$saveResult) {
+            throw new \Exception("Not saved #{$linkId} g.{$type}");
         }
-        $storage->save($solution);
     }
 
     $view = new \Processor\View();

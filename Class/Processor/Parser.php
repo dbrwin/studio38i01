@@ -166,7 +166,7 @@ class Parser
 
     public function changeIndustry($htmlStr, $industry)
     {
-        $result = preg_replace('/(<tr.+?Отрасли:.+?)(<td.+>).+?(<\/tr>)/s', '$1'.'<td>'.$industry.'</td>'.'$3', $htmlStr);
+        $result = preg_replace('/(Отрасли.+?<td>)(.*)(<\/td>)/U', '$1'.'<td>'.$industry.'</td>'.'$3', $htmlStr);
         return $result;
     }
 

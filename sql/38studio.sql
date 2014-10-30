@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Время создания: Окт 30 2014 г., 16:46
+-- Время создания: Окт 31 2014 г., 03:18
 -- Версия сервера: 5.5.35
 -- Версия PHP: 5.5.15-1~dotdeb.1
 
@@ -37,13 +37,13 @@ CREATE TABLE IF NOT EXISTS `solutions` (
   `functions` varchar(255) NOT NULL,
   `arms` int(11) NOT NULL,
   `date` varchar(255) NOT NULL,
-  `text` text,
-  `review` text,
+  `text` text NOT NULL,
+  `reviewtext` text,
   `revdocs` text,
   `raw` text NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `linkid` (`linkid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=94 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

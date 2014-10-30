@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/DeltaPHP/DeltaCore.git",
-                "reference": "333a2e98f8581041f70a137050e068b736673d5f"
+                "reference": "69c306a4b683d88055b80f09608b1b7503d0b0f1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/DeltaPHP/DeltaCore/zipball/333a2e98f8581041f70a137050e068b736673d5f",
-                "reference": "333a2e98f8581041f70a137050e068b736673d5f",
+                "url": "https://api.github.com/repos/DeltaPHP/DeltaCore/zipball/69c306a4b683d88055b80f09608b1b7503d0b0f1",
+                "reference": "69c306a4b683d88055b80f09608b1b7503d0b0f1",
                 "shasum": ""
             },
             "require": {
@@ -44,7 +44,7 @@
                 }
             ],
             "description": "Delta PHP framework - fast, light, easy (core)",
-            "time": "2014-10-11 01:31:44"
+            "time": "2014-10-29 01:15:23"
         },
         {
             "name": "deltaphp/deltadb",
@@ -52,12 +52,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/DeltaPHP/DeltaDb.git",
-                "reference": "380239c28a0200e2b9af096193ff5db98a5888ff"
+                "reference": "ae550275add3735b9596412f4ae54ed2fca9c34e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/DeltaPHP/DeltaDb/zipball/380239c28a0200e2b9af096193ff5db98a5888ff",
-                "reference": "380239c28a0200e2b9af096193ff5db98a5888ff",
+                "url": "https://api.github.com/repos/DeltaPHP/DeltaDb/zipball/ae550275add3735b9596412f4ae54ed2fca9c34e",
+                "reference": "ae550275add3735b9596412f4ae54ed2fca9c34e",
                 "shasum": ""
             },
             "require": {
@@ -80,7 +80,7 @@
                 }
             ],
             "description": "DB models for delta framework",
-            "time": "2014-10-08 11:56:37"
+            "time": "2014-10-30 18:21:57"
         },
         {
             "name": "deltaphp/deltarouter",
@@ -187,12 +187,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/DeltaPHP/HttpWarp.git",
-                "reference": "fd663fe7673340d5257280ea1050cba8c721d560"
+                "reference": "873ebaeede3a6da0409129cea8e6ada42d8effcf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/DeltaPHP/HttpWarp/zipball/fd663fe7673340d5257280ea1050cba8c721d560",
-                "reference": "fd663fe7673340d5257280ea1050cba8c721d560",
+                "url": "https://api.github.com/repos/DeltaPHP/HttpWarp/zipball/873ebaeede3a6da0409129cea8e6ada42d8effcf",
+                "reference": "873ebaeede3a6da0409129cea8e6ada42d8effcf",
                 "shasum": ""
             },
             "require": {
@@ -215,7 +215,7 @@
                 }
             ],
             "description": "request, response, session and other tools for base web development",
-            "time": "2014-08-29 16:33:44"
+            "time": "2014-10-29 01:13:00"
         },
         {
             "name": "pimple/pimple",

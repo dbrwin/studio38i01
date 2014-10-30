@@ -230,7 +230,7 @@ class Solution extends AbstractEntity implements EntityInterface
      */
     public function setRaw($raw)
     {
-        $this->raw = $raw;
+        $this->raw = trim($raw);
     }
 
     public function setReview(Review $review)

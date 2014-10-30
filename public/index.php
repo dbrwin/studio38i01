@@ -8,36 +8,30 @@ header("Content-type: text/html; charset=utf-8");
 define("ROOT_DIR", realpath("../"));
 $loader = require '../vendor/autoload.php';
 
-function get_last_retrieve_url_contents_content_type () {
-    return "Content-type: text/html; charset=windows-1251";
-}
 
-$type = isset($_GET["t"]) ? (integer) $_GET["t"] : 1;
-$page = isset($_GET["p"]) ? (integer) $_GET["p"] : 1;
+$solution = isset($_GET["s"]) ? (integer) $_GET["s"] : null;
 
-try {
-    $client = new \Processor\Client();
-    $raw = $client->getSolutionsList($type, $page);
-    $parser = new \Processor\Parser();
-    $solutionsLinks = $parser->parseSolutionsLinks($raw);
-    $maxPages = $parser->parseSolutionsListPagination($parser->prepareHtml($raw));
-    $solutions = [];
-    foreach ($solutionsLinks as $linkId) {
-        $solutionRaw = $client->getSolution($linkId);
-        $info = $parser->parseSolution($solutionRaw);
-        $solutions[] = $info;
-    }
-    $view = new \Processor\View();
+\DeltaDb\DbaStorage::setDefault(function () {
+    $dbAdapter = new \DeltaDb\Adapter\MysqlPdoAdapter();
+    $dbAdapter->connect('mysql:host=localhost;dbname=38studio', ["password" => "123"]);
+    return $dbAdapter;
+});
+
+$storage = new \Processor\StorageMysql();
+$view = new \Processor\View();
+$view->setTemplateExtension("phtml");
+
+if ($solution) {
+    $solution = $storage->findOne(["linkid" => $solution]);
+    $view->assign("solution", $solution);
+    $html = $view->render("solution");
+} else {
+    $solutions = $storage->find();
     $view->assign("solutions", $solutions);
-    $view->assign("currentPage", $page);
-    $view->assign("currentType", $type);
-    $view->assign("maxPages", $maxPages);
-    $html = $view->render("list");
-    echo $html;
-} catch (\Exception $e) {
-    http_response_code(500);
-    echo "<h1>Error</h1> \n";
+    $html = $view->render("solutions");
 }
+
+echo $html;
 
 
 
