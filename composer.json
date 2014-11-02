@@ -9,13 +9,15 @@
     "minimum-stability": "dev",
     "autoload": {
         "psr-0": {
-            "Processor": "./Class"
+            "Processor": "./Class",
+            "Controller": "./"
         }
     },
     "require": {
         "sunra/php-simple-html-dom-parser": "1.5",
         "deltaphp/dtpl": "dev-master",
         "deltaphp/deltadb": "dev-master",
-        "deltaphp/deltacore": "dev-master"
+        "deltaphp/deltacore": "dev-master",
+        "twig/twig": "1.*"
     }
 }

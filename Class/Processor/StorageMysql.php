@@ -43,5 +43,14 @@ class StorageMysql extends Repository
         return $data;
     }
 
+    public function load(EntityInterface $entity, array $data)
+    {
+        if (isset($data["revdocs"]) && is_string($data["revdocs"])) {
+            $revdocs = unserialize($data["revdocs"]);
+            $data["revdocs"] = $revdocs;
+        }
+        parent::load($entity, $data);
+    }
+
 
 } 

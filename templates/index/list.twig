@@ -1,0 +1,38 @@
+{% extends "layout.twig" %}
+
+{% block article %}
+    <br/>
+    <br/>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>id</th>
+            <th>Тип</th>
+            <th>Организация и город</th>
+            <th>Программный продукт</th>
+            <th>Отрасль</th>
+            <th>Область автоматизации</th>
+            <th>АРМ</th>
+            <th>Дата внедрения</th>
+            <th>Отзывы</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in items %}
+        <tr>
+            <td><a href="/{{ item.id|idStr }}">{{ item.id }}</a></td>
+            <td>{{ item.group }}</td>
+            <td>{{ item.organization|raw }} <br/> {{ item.city }}</td>
+            <td>{{ item.type }}</td>
+            <td>{{ item.industry }}</td>
+            <td>{{ item.functions }}</td>
+            <td>{{ item.arms }}</td>
+            <td>{{ item.date }}</td>
+            <td>{% if item.reviewtext %} <span class="glyphicon glyphicon-book"></span> {% endif %}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+
+{% endblock article %}

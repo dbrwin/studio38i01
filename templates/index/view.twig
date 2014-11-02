@@ -1,0 +1,48 @@
+{% extends "layout.twig" %}
+
+{% block article %}
+    <br/>
+    <br/>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>id</th>
+            <th>Организация и город</th>
+            <th>Программный продукт</th>
+            <th>Отрасль</th>
+            <th>Область автоматизации</th>
+            <th>АРМ</th>
+            <th>Дата внедрения</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td><a href="/{{ item.id|idStr }}">{{ item.id }}</a></td>
+            <td>{{ item.organization|raw }} <br/> {{ item.city }}</td>
+            <td>{{ item.type }}</td>
+            <td>{{ item.industry }}</td>
+            <td>{{ item.functions }}</td>
+            <td>{{ item.arms }}</td>
+            <td>{{ item.date }}</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div>
+        {{ item.text|raw }}
+    </div>
+
+    <h2>Отзыв</h2>
+    {% if item.reviewtext %}
+        <div>
+            {{ item.reviewtext|raw }}
+        </div>
+        <div>
+            {% for image in item.revdocs %}
+                <img src="/reviews/{{ image }}" width="300" height="300" alt=""/>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+
+{% endblock article %}

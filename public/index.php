@@ -1,37 +1,18 @@
 <?php
-date_default_timezone_set("Asia/Irkutsk");
-error_reporting(0);
-ini_set("display_errors", 0);
 
-header("Content-type: text/html; charset=utf-8");
+error_reporting(E_ALL);
+ini_set('display_errors', true);
 
-define("ROOT_DIR", realpath("../"));
-$loader = require '../vendor/autoload.php';
+define('ROOT_DIR', realpath(__DIR__ . '/..'));
+define('PUBLIC_DIR', ROOT_DIR . '/public');
+define('DATA_DIR', ROOT_DIR . '/data');
 
+$loader = include_once ROOT_DIR . "/vendor/autoload.php";
+$loader->setUseIncludePath(true);
 
-$solution = isset($_GET["s"]) ? (integer) $_GET["s"] : null;
+$app = new \DeltaCore\Application();
+$app->setLoader($loader);
 
-\DeltaDb\DbaStorage::setDefault(function () {
-    $dbAdapter = new \DeltaDb\Adapter\MysqlPdoAdapter();
-    $dbAdapter->connect('mysql:host=localhost;dbname=38studio', ["password" => "123"]);
-    return $dbAdapter;
-});
-
-$storage = new \Processor\StorageMysql();
-$view = new \Processor\View();
-$view->setTemplateExtension("phtml");
-
-if ($solution) {
-    $solution = $storage->findOne(["linkid" => $solution]);
-    $view->assign("solution", $solution);
-    $html = $view->render("solution");
-} else {
-    $solutions = $storage->find();
-    $view->assign("solutions", $solutions);
-    $html = $view->render("solutions");
-}
-
-echo $html;
-
+$app->run();
 
 
