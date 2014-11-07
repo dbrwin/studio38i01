@@ -33,4 +33,13 @@ return [
             setlocale(LC_ALL, 'ru_RU.utf8');
         }
     ],
+    "logger" => [
+        "name" => "main",
+        "handlers" => [
+            "Monolog\\StreamHandler" => [
+                "path" => ROOT_DIR . "/data/log/main.log",
+                "level" => \Monolog\Logger::DEBUG,
+            ]
+        ]
+    ],
 ];

@@ -18,6 +18,7 @@
         "deltaphp/dtpl": "dev-master",
         "deltaphp/deltadb": "dev-master",
         "deltaphp/deltacore": "dev-master",
-        "twig/twig": "1.*"
+        "twig/twig": "1.*",
+        "monolog/monolog": "1.*"
     }
 }

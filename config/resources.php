@@ -13,5 +13,15 @@ return [
             return $dbAdapter;
         };
     },
+    "logger" => function($c) {
+        $config = $c->getConfig(["logger"])->toArray();
+        $log = new \Monolog\Logger($config["name"]);
+        $handlers = array_keys($config["handlers"]);
+        foreach ($handlers as $handlerName) {
+            $handler = $c[$handlerName];
+            $log->pushHandler($handler);
+        }
+        return $log;
+    },
 
 ];

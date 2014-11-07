@@ -59,27 +59,31 @@ try {
             throw new \Exception("Not saved #{$linkId} g.{$type}");
         }
     }
-
-    $view = new \Processor\View();
-    $view->setTemplateExtension("phtml");
-    $view->assign("currentPage", $page);
-    $view->assign("maxPages", $maxPages);
-    $view->assign("currentType", $type);
-    $view->assign("nextPage", $nextPage);
-    $solutionsCount = $storage->count(["group" => (integer)$type]);
-    $view->assign("solutionsCount", $solutionsCount);
-
-    if ($nextPage) {
-        $html = $view->render("parser-work");
-    } else {
-        $html = $view->render("parser-report");
-    }
-    echo $html;
 } catch (\Exception $e) {
+
+    $log = new \Monolog\Logger("parser");
+    $log->pushHandler(new \Monolog\Handler\StreamHandler(ROOT_DIR . '/data/log/parser.log', \Monolog\Logger::DEBUG));
+    $log->error("error #{$e->getCode()} in parsing solution #{$linkId} :: {$e->getMessage()} [{$e->getFile()}:{$e->getLine()}");
     header("Location: /parser.php?t={$type}&p={$page}");
     echo "<h1>Error</h1> \n";
     var_dump($e);
 }
+
+$view = new \Processor\View();
+$view->setTemplateExtension("phtml");
+$view->assign("currentPage", $page);
+$view->assign("maxPages", $maxPages);
+$view->assign("currentType", $type);
+$view->assign("nextPage", $nextPage);
+$solutionsCount = $storage->count(["group" => (integer)$type]);
+$view->assign("solutionsCount", $solutionsCount);
+
+if ($nextPage) {
+    $html = $view->render("parser-work");
+} else {
+    $html = $view->render("parser-report");
+}
+echo $html;
 
 
 
