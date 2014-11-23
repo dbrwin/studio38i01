@@ -12,6 +12,7 @@ use DeltaDb\EntityInterface;
 class Solution extends AbstractEntity implements EntityInterface
 {
     protected $linkid;
+    protected $title;
     protected $group;
     protected $organization;
     protected $city;
@@ -24,6 +25,22 @@ class Solution extends AbstractEntity implements EntityInterface
     protected $reviewtext;
     protected $revdocs;
     protected $raw;
+
+    /**
+     * @return mixed
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * @param mixed $title
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+    }
 
     /**
      * @return mixed

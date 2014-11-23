@@ -134,6 +134,9 @@ class Parser
             [
                 "tpl" => ["Другие предприятия и организации"],
                 "item"=>"Услуги"
+            ],[
+                "tpl" => ["Государственное и муниципальное управление, силовые структуры, другие бюджетные учреждения"],
+                "item"=>"Государственные органы"
             ],
         ];
         foreach($tplArray as $row) {
@@ -331,9 +334,20 @@ class Parser
     public function getText($htmlStr, $industry, $functions)
     {
         $htmlStr = preg_replace("/<tr.+?Партнер, осуществивший внедрение\/проект.+?<\/tr>/s", "", $htmlStr);
+        $htmlStr = preg_replace('/(<p((.+?)<a(.+?)class=\"navbar\">(.*?)<\/a>\s+)<\/p>)/', "", $htmlStr);
+        $htmlStr = preg_replace('/(<p>\s+<a href=\"\.\/\?geo_id=\d+.+<\/p>)/', "", $htmlStr);
         $htmlStr = $this->changeIndustry($htmlStr, $industry);
         $htmlStr = $this->changeFunctions($htmlStr, $functions);
         return $htmlStr;
+    }
+
+    public function getTitle($dom)
+    {
+        $h1 = $dom->find("h1", 0);
+        if (!$h1) {
+            return null;
+        }
+        return $h1->plaintext;
     }
 
     public function parseSolution($htmlStr)
@@ -348,6 +362,7 @@ class Parser
         $mainData = $this->prepareHtml($mainDom);
 
         $solution = new Solution();
+        $solution->setTitle($this->getTitle($mainDom));
         $solution->setType($this->getTypeSolution($mainData));
         $solution->setIndustry($this->getIndustry($mainData));
         $dataOrg = $this->getOrganization($mainData);

@@ -18,6 +18,7 @@ class StorageMysql extends Repository
             "fields" => [
                 "id",
                 "linkid",
+                "title",
                 "group",
                 "organization",
                 "city",

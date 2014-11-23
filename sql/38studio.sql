@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Время создания: Ноя 03 2014 г., 01:10
+-- Время создания: Ноя 24 2014 г., 04:18
 -- Версия сервера: 5.5.35
 -- Версия PHP: 5.5.15-1~dotdeb.1
 
@@ -26,9 +26,10 @@ SET time_zone = "+00:00";
 -- Структура таблицы `solutions`
 --
 
-CREATE TABLE `solutions` (
+CREATE TABLE IF NOT EXISTS `solutions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `linkid` int(11) NOT NULL,
+  `title` varchar(255) NOT NULL,
   `group` int(11) NOT NULL,
   `organization` varchar(255) NOT NULL,
   `city` varchar(255) NOT NULL,
