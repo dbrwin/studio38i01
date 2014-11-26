@@ -25,6 +25,7 @@ class Solution extends AbstractEntity implements EntityInterface
     protected $reviewtext;
     protected $revdocs;
     protected $raw;
+    protected $ptype;
 
     /**
      * @return mixed
@@ -254,6 +255,22 @@ class Solution extends AbstractEntity implements EntityInterface
     {
         $this->setReviewtext($review->getText());
         $this->setRevdocs($review->getFiles());
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPtype()
+    {
+        return $this->ptype;
+    }
+
+    /**
+     * @param mixed $ptype
+     */
+    public function setPtype($ptype)
+    {
+        $this->ptype = $ptype;
     }
 
 }

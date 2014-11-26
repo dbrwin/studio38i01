@@ -84,65 +84,65 @@ class Parser
     {
         $tplArray = [
             [
-                "tpl" => ["Здравоохранение"],
-                "item"=> "Здравоохранение"
+                "tpl"  => ["Здравоохранение"],
+                "item" => "Здравоохранение"
             ],
             [
-                "tpl" => ["Образование, культура, наука"],
-                "item"=>"Образование и культура"
+                "tpl"  => ["Образование, культура, наука"],
+                "item" => "Образование и культура"
             ],
             [
-                "tpl" => ["Общественное и плановое питание, гостиничный бизнес, туризм"],
-                "item"=>"Хорека и туризм"
+                "tpl"  => ["Общественное и плановое питание, гостиничный бизнес, туризм"],
+                "item" => "Хорека и туризм"
             ],
             [
-                "tpl" => ["Производство, ТЭК"],
-                "item"=>"Производство"
+                "tpl"  => ["Производство, ТЭК"],
+                "item" => "Производство"
             ],
             [
-                "tpl" => ["Профессиональные услуги"],
-                "item"=>"Услуги"
+                "tpl"  => ["Профессиональные услуги"],
+                "item" => "Услуги"
             ],
             [
-                "tpl" => ["Сельское и лесное хозяйство"],
-                "item"=>"Сельское хозяйство"
+                "tpl"  => ["Сельское и лесное хозяйство"],
+                "item" => "Сельское хозяйство"
             ],
             [
-                "tpl" => ["Строительство, девелопмент, ЖКХ"],
-                "item"=>"Строительство и ЖКХ"
+                "tpl"  => ["Строительство, девелопмент, ЖКХ"],
+                "item" => "Строительство и ЖКХ"
             ],
             [
-                "tpl" => ["Торговля, склад, логистика, транспорт", "Торговля"],
-                "item"=>"Торговля"
+                "tpl"  => ["Торговля, склад, логистика, транспорт", "Торговля"],
+                "item" => "Торговля"
             ],
             [
-                "tpl" => ["Торговля, склад, логистика, транспорт", "Транспорт"],
-                "item"=>"Логистика и транспорт"
+                "tpl"  => ["Торговля, склад, логистика, транспорт", "Транспорт"],
+                "item" => "Логистика и транспорт"
             ],
             [
-                "tpl" => ["Торговля, склад, логистика, транспорт", "Логистика и управление складским хозяйством"],
-                "item"=>"Логистика и транспорт"
+                "tpl"  => ["Торговля, склад, логистика, транспорт", "Логистика и управление складским хозяйством"],
+                "item" => "Логистика и транспорт"
             ],
             [
-                "tpl" => ["Торговля, склад, логистика, транспорт", "Другие предприятия торговли, складского хозяйства и транспорта"],
-                "item"=>"Логистика и транспорт"
+                "tpl"  => ["Торговля, склад, логистика, транспорт", "Другие предприятия торговли, складского хозяйства и транспорта"],
+                "item" => "Логистика и транспорт"
             ],
             [
-                "tpl" => ["Финансовый сектор"],
-                "item"=>"Услуги"
+                "tpl"  => ["Финансовый сектор"],
+                "item" => "Услуги"
             ],
             [
-                "tpl" => ["Другие предприятия и организации"],
-                "item"=>"Услуги"
-            ],[
-                "tpl" => ["Государственное и муниципальное управление, силовые структуры, другие бюджетные учреждения"],
-                "item"=>"Государственные органы"
+                "tpl"  => ["Другие предприятия и организации"],
+                "item" => "Услуги"
+            ], [
+                "tpl"  => ["Государственное и муниципальное управление, силовые структуры, другие бюджетные учреждения"],
+                "item" => "Государственные органы"
             ],
         ];
-        foreach($tplArray as $row) {
+        foreach ($tplArray as $row) {
             if ($inData[0] === $row["tpl"][0]) {
-                if (count($row["tpl"]) === 1 ) {
-                    return($row["item"]);
+                if (count($row["tpl"]) === 1) {
+                    return ($row["item"]);
                 } else {
                     if (count($inData) > 1) {
                         if ($inData[1] === $row["tpl"][1]) {
@@ -169,7 +169,7 @@ class Parser
 
     public function changeIndustry($htmlStr, $industry)
     {
-        $result = preg_replace('/(Отрасли.+?<td>)(.*)(<\/td>)/U', '$1'.'<td>'.$industry.'</td>'.'$3', $htmlStr);
+        $result = preg_replace('/(Отрасли.+?<td>)(.*)(<\/td>)/U', '$1' . '<td>' . $industry . '</td>' . '$3', $htmlStr);
         return $result;
     }
 
@@ -223,111 +223,129 @@ class Parser
         ];
     }
 
+    public function getLiList($dom)
+    {
+        if (!$dom instanceof \simple_html_dom_node) {
+            return null;
+        }
+        $ul = $dom->find("ul", 0);
+        if (!$ul) {
+            return [];
+        }
+
+        $firstLiList = $ul->find("li");
+        if (!$firstLiList) {
+            return [];
+        }
+        return [
+            "ul"     => $ul,
+            "liList" => $firstLiList,
+        ];
+    }
+
 
     public function getFunctions($dom)
     {
-        $firstNode = $this->getChildUlLi($dom);
-        $firstText = $firstNode ? $firstNode["text"] : null;
-        switch ($firstText) {
-            case "Финансы, управленческий учет, мониторинг показателей":
-                $secondNode = $this->getChildUlLi($firstNode["ul"]);
-                $secondText = $secondNode ? $secondNode["text"] : null;
-                switch ($secondText) {
-                    case "Учет бухгалтерский, налоговый, бюджетный, включая регламентированную отчетность":
-                        $thirdNode = $this->getChildUlLi($secondNode["ul"]);
-                        $thirdText = $thirdNode ? $thirdNode["text"] : null;
-                        switch ($thirdText) {
-                            case "Бухгалтерский учет":
-                            case "Налоговый учет":
-                                return "Бухгалтерский, налоговый учет";
-                                break;
-                            case "Бюджетный учет (для бюджетных учреждений)":
-                                return "Бюджетный учет";
-                                break;
-                            default :
-                                return null;
-                        }
-                        break;
-                    case "Бюджетирование, финансовое планирование":
-                    case "Управленческий учет и расчет себестоимости методом ABC":
-                    case "Управленческий учет":
-                        return "Управленческий учет и бюджетирование";
-                        break;
-                }
-                break;
-            case "Учет по международным и национальным стандартам":
-                return "МСФО";
-                break;
-            case "Управление отношениями с клиентами (CRM)":
-                return "Управление продажами и отношениями с клиентами (CRM)";
-                break;
-            case "Управление персоналом и кадровый учет (HRM)":
-                return "Кадровый учет и зарплата (HRM)";
-                break;
-            case "Управление продажами, логистикой и транспортом (SFM, WMS, TMS)":
-                $secondNode = $this->getChildUlLi($firstNode["ul"]);
-                $secondText = $secondNode ? $secondNode["text"] : null;
-                switch ($secondText) {
-                    case "Склад и логистика":
-                    case "Транспорт":
-                        return "Управление логистикой и транспортом";
-                        break;
-                    case "Продажи (сбыт), сервис, маркетинг":
-                        return "Управление продажами и отношениями с клиентами (CRM)";
-                        break;
-                }
-                return null;
-                break;
-            case "Закупки (снабжение) и управление отношениями с поставщиками":
-                return "Управление продажами и отношениями с клиентами (CRM)";
-                break;
-            case "Документооборот (ECM)":
-                return "Документооборот";
-                break;
-            case "Управление бизнес-процессами и ИТ-процессами ":
-                return "Оптимизация бизнес-процессов";
-                break;
-            case "Различная отраслевая специфика":
-                $secondNode = $this->getChildUlLi($firstNode["ul"]);
-                $secondText = $secondNode ? $secondNode["text"] : null;
-                switch ($secondText) {
-                    case "Строительство" :
-                        return "Отраслевой учет";
-                    default:
-                        return null;
-                        break;
-                }
-                break;
-            case "Другое":
-                $secondNode = $this->getChildUlLi($firstNode["ul"]);
-                $secondText = $secondNode ? $secondNode["text"] : null;
-                switch ($secondText) {
-                    case "Другое" :
-                        return "Отраслевой учет";
-                    default:
-                        return null;
-                        break;
-                }
-                break;
-            case "Различная отраслевая специфика":
-                $secondNode = $this->getChildUlLi($firstNode["ul"]);
-                $secondText = $secondNode ? $secondNode["text"] : null;
-                switch ($secondText) {
-                    case "Производство, услуги" :
-                        return "Управление производством (ERP)";
-                    default:
-                        return null;
-                        break;
-                }
-                break;
-            default :
-                return null;
+        $functions = [];
+        $liList = $this->getLiList($dom);
+        if (!$liList) {
+            return null;
         }
+        $firstUl = $liList["ul"];
+        $liList = $liList["liList"];
+        foreach ($liList as $firstLi) {
+            $firstText = $firstLi->plaintext;
+            switch ($firstText) {
+                case "Финансы, управленческий учет, мониторинг показателей":
+                    $secondNode = $this->getChildUlLi($firstUl);
+                    $secondText = $secondNode ? $secondNode["text"] : null;
+                    switch ($secondText) {
+                        case "Учет бухгалтерский, налоговый, бюджетный, включая регламентированную отчетность":
+                            $thirdNode = $this->getChildUlLi($secondNode["ul"]);
+                            $thirdText = $thirdNode ? $thirdNode["text"] : null;
+                            switch ($thirdText) {
+                                case "Бухгалтерский учет":
+                                case "Налоговый учет":
+                                    $functions[] = "Бухгалтерский, налоговый учет";
+                                case "Бюджетный учет (для бюджетных учреждений)":
+                                    $functions[] = "Бюджетный учет";
+                            }
+                            break;
+                        case "Бюджетирование, финансовое планирование":
+                        case "Управленческий учет и расчет себестоимости методом ABC":
+                        case "Управленческий учет":
+                            $functions[] = "Управленческий учет и бюджетирование";
+                            break;
+                    }
+                    break;
+                case "Учет по международным и национальным стандартам":
+                    $functions[] = "МСФО";
+                    break;
+                case "Управление отношениями с клиентами (CRM)":
+                    $functions[] = "Управление продажами и отношениями с клиентами (CRM)";
+                    break;
+                case "Управление персоналом и кадровый учет (HRM)":
+                    $functions[] = "Кадровый учет и зарплата (HRM)";
+                    break;
+                case "Управление продажами, логистикой и транспортом (SFM, WMS, TMS)":
+                    $secondNode = $this->getChildUlLi($firstUl);
+                    $secondText = $secondNode ? $secondNode["text"] : null;
+                    switch ($secondText) {
+                        case "Склад и логистика":
+                        case "Транспорт":
+                            $functions[] = "Управление логистикой и транспортом";
+                            break;
+                        case "Продажи (сбыт), сервис, маркетинг":
+                            $functions[] = "Управление продажами и отношениями с клиентами (CRM)";
+                            break;
+                    }
+                    break;
+                case "Закупки (снабжение) и управление отношениями с поставщиками":
+                    $functions[] = "Управление продажами и отношениями с клиентами (CRM)";
+                    break;
+                case "Документооборот (ECM)":
+                    $functions[] = "Документооборот";
+                    break;
+                case "Управление бизнес-процессами и ИТ-процессами ":
+                    $functions[] = "Оптимизация бизнес-процессов";
+                    break;
+                case "Различная отраслевая специфика":
+                    $secondNode = $this->getChildUlLi($firstUl);
+                    $secondText = $secondNode ? $secondNode["text"] : null;
+                    switch ($secondText) {
+                        case "Строительство" :
+                            $functions[] = "Отраслевой учет";
+                            break;
+                    }
+                    break;
+                case "Другое":
+                    $secondNode = $this->getChildUlLi($firstUl);
+                    $secondText = $secondNode ? $secondNode["text"] : null;
+                    switch ($secondText) {
+                        case "Другое" :
+                            $functions[] = "Отраслевой учет";
+                            break;
+                    }
+                    break;
+                case "Различная отраслевая специфика":
+                    $secondNode = $this->getChildUlLi($firstUl);
+                    $secondText = $secondNode ? $secondNode["text"] : null;
+                    switch ($secondText) {
+                        case "Производство, услуги" :
+                            $functions[] = "Управление производством (ERP)";
+                            break;
+                    }
+                    break;
+            }
+        }
+        $functions = array_unique($functions);
+        return $functions;
     }
 
     public function changeFunctions($htmlStr, $functions)
     {
-        $result = preg_replace('/(<h3>Автоматизированы следующие функции:<\/h3>\s*<ul>)(.+?)(\s*<\/ul>\s*<h3>)/s', '$1'.'<li>'.$functions.'</li>'.'$3', $htmlStr);
+        $functions = implode(',', $functions);
+        $result = preg_replace('/(<h3>Автоматизированы следующие функции:<\/h3>\s*<ul>)(.+?)(\s*<\/ul>\s*<h3>)/s', '$1' . '<li>' . $functions . '</li>' . '$3', $htmlStr);
         return $result;
     }
 
@@ -348,6 +366,14 @@ class Parser
             return null;
         }
         return $h1->plaintext;
+    }
+
+    public function getPType($htmlStr)
+    {
+        if (preg_match('/<h3>\s*?Тип\s+?проекта:(.+?)\s*?<\/h3>/', $htmlStr, $matches)) {
+            return trim($matches[1]);
+        }
+        return false;
     }
 
     public function parseSolution($htmlStr)
@@ -373,6 +399,7 @@ class Parser
         $solution->setFunctions($this->getFunctions($mainDom));
         $text = $this->getText($mainData, $solution->getIndustry(), $solution->getFunctions());
         $solution->setText($text);
+        $solution->setPtype($this->getPType($mainData));
         return $solution;
     }
 
@@ -385,9 +412,9 @@ class Parser
         }
         if (preg_match_all('/(<img[^<]*name=\S(\/home\/www\/www.1c.ru\/rus\/partners\/solutions\/responses\/[\w\/\.\-\_]+))/', $htmlStr, $matches, PREG_PATTERN_ORDER)) {
             $client = $this->getHttpClient();
-            foreach($matches[2] as $num=>$url) {
+            foreach ($matches[2] as $num => $url) {
                 $url = "http://www.1c.ru" . $url;
-                $num = $num+1;
+                $num = $num + 1;
                 $file = $client->saveFile($url, "review-{$solutionId}-{$num}");
                 $file = strtolower($file);
                 $review->addFile($file);

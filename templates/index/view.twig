@@ -21,7 +21,13 @@
             <td>{{ item.organization|raw }} <br/> {{ item.city }}</td>
             <td>{{ item.type }}</td>
             <td>{{ item.industry }}</td>
-            <td>{{ item.functions }}</td>
+            <td>
+                <ul>
+                    {% for function in item.functions %}
+                        <li>{{ function }}</li>
+                    {% endfor %}
+                </ul>
+            </td>
             <td>{{ item.arms }}</td>
             <td>{{ item.date }}</td>
         </tr>
@@ -29,11 +35,17 @@
     </table>
 
     <div>
+        <h3>Тип</h3>
+       {{ item.ptype }}
+    </div>
+
+    <div>
         {{ item.text|raw }}
     </div>
 
-    <h2>Отзыв</h2>
+
     {% if item.reviewtext %}
+        <h2>Отзыв</h2>
         <div>
             {{ item.reviewtext|raw }}
         </div>

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Время создания: Ноя 24 2014 г., 04:18
+-- Время создания: Ноя 27 2014 г., 06:17
 -- Версия сервера: 5.5.35
 -- Версия PHP: 5.5.15-1~dotdeb.1
 
@@ -31,6 +31,7 @@ CREATE TABLE IF NOT EXISTS `solutions` (
   `linkid` int(11) NOT NULL,
   `title` varchar(255) NOT NULL,
   `group` int(11) NOT NULL,
+  `ptype` varchar(255) NOT NULL,
   `organization` varchar(255) NOT NULL,
   `city` varchar(255) NOT NULL,
   `industry` varchar(255) DEFAULT NULL,
