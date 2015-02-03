@@ -36,37 +36,17 @@ class StorageMysql extends Repository
         ],
     ];
 
-    public function fieldArraySave($data, $fieldName)
-    {
-        if (isset($data["fields"][$fieldName]) && is_array($data["fields"][$fieldName])) {
-            $data["fields"][$fieldName] = serialize($data["fields"][$fieldName]);
-        }
-        return $data;
-    }
-
-    public function fieldArrayLoad($data, $fieldName)
-    {
-        if (isset($data[$fieldName])) {
-            $value = @unserialize($data[$fieldName]);
-            $data[$fieldName] = $value ?: [];
-        }
-        return $data;
-    }
-
     public function reserve(EntityInterface $entity)
     {
         $data = parent::reserve($entity);
-        $data = $this->fieldArraySave($data, "revdocs");
-        $data = $this->fieldArraySave($data, "functions");
+        $data = $this->serializeFields($data, ["revdocs", "functions"]);
         return $data;
     }
 
     public function load(EntityInterface $entity, array $data)
     {
-        $data = $this->fieldArrayLoad($data, "revdocs");
-        $data = $this->fieldArrayLoad($data, "functions");
+        $data = $this->unserializeFields($data, ["revdocs", "functions"]);
         parent::load($entity, $data);
     }
-
 
 } 

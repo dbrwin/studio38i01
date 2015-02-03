@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="static/lib/bootstrap/dist/css/bootstrap-theme.css">
 
     <?php if($nextPage):?>
-    <meta http-equiv="refresh" content="0; url=/parser.php?t=<? echo $currentType;?>&p=<? echo $nextPage;?>" />
+    <meta http-equiv="refresh" content="0; url=/<?=$parserType?:"parser.php"?>?t=<? echo $currentType;?>&p=<? echo $nextPage;?>" />
     <?php endif;?>
 
 </head>

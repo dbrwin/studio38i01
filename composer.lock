@@ -52,12 +52,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/DeltaPHP/DeltaDb.git",
-                "reference": "ae550275add3735b9596412f4ae54ed2fca9c34e"
+                "reference": "b1f36bde379cb00376a9128c77b170af3eb29e8b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/DeltaPHP/DeltaDb/zipball/ae550275add3735b9596412f4ae54ed2fca9c34e",
-                "reference": "ae550275add3735b9596412f4ae54ed2fca9c34e",
+                "url": "https://api.github.com/repos/DeltaPHP/DeltaDb/zipball/b1f36bde379cb00376a9128c77b170af3eb29e8b",
+                "reference": "b1f36bde379cb00376a9128c77b170af3eb29e8b",
                 "shasum": ""
             },
             "require": {
@@ -80,7 +80,7 @@
                 }
             ],
             "description": "DB models for delta framework",
-            "time": "2014-10-30 18:21:57"
+            "time": "2015-02-03 08:12:15"
         },
         {
             "name": "deltaphp/deltarouter",
@@ -223,12 +223,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "53c6cf358bf50a3d31a003639245dac1d4de694b"
+                "reference": "7583a2b96b9fda7ece90e34a23cd46e4858b3352"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/53c6cf358bf50a3d31a003639245dac1d4de694b",
-                "reference": "53c6cf358bf50a3d31a003639245dac1d4de694b",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/7583a2b96b9fda7ece90e34a23cd46e4858b3352",
+                "reference": "7583a2b96b9fda7ece90e34a23cd46e4858b3352",
                 "shasum": ""
             },
             "require": {
@@ -242,7 +242,7 @@
                 "aws/aws-sdk-php": "~2.4, >2.4.8",
                 "doctrine/couchdb": "~1.0@dev",
                 "graylog2/gelf-php": "~1.0",
-                "phpunit/phpunit": "~3.7.0",
+                "phpunit/phpunit": "~4.0",
                 "raven/raven": "~0.5",
                 "ruflin/elastica": "0.90.*",
                 "videlalvaro/php-amqplib": "~2.4"
@@ -261,7 +261,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.11.x-dev"
+                    "dev-master": "1.12.x-dev"
                 }
             },
             "autoload": {
@@ -287,7 +287,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2014-10-29 06:32:01"
+            "time": "2015-01-29 16:05:08"
         },
         {
             "name": "pimple/pimple",
@@ -429,21 +429,21 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "f8b6e918a7d8e073efe14cbed7ae02df40ef19ed"
+                "reference": "74a8bddec4e8fbea8b3f497bc7cc4bdf1a498330"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/f8b6e918a7d8e073efe14cbed7ae02df40ef19ed",
-                "reference": "f8b6e918a7d8e073efe14cbed7ae02df40ef19ed",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/74a8bddec4e8fbea8b3f497bc7cc4bdf1a498330",
+                "reference": "74a8bddec4e8fbea8b3f497bc7cc4bdf1a498330",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.2.4"
+                "php": ">=5.2.7"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.16-dev"
+                    "dev-master": "1.18-dev"
                 }
             },
             "autoload": {
@@ -478,7 +478,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2014-10-23 15:29:03"
+            "time": "2015-01-30 11:04:23"
         }
     ],
     "packages-dev": [],
@@ -490,6 +490,7 @@
         "deltaphp/deltacore": 20
     },
     "prefer-stable": false,
+    "prefer-lowest": false,
     "platform": [],
     "platform-dev": []
 }

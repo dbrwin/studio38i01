@@ -34,17 +34,39 @@ class Parser
      */
     public function getDom($htmlStr)
     {
+        if (extension_loaded("mbstring") && ini_get("mbstring.func_overload") != 0) {
+            throw new \Exception("mbstring.func_overload must be set to 0");
+        }
         return HtmlDomParser::str_get_html($htmlStr);
     }
 
     public function parseSolutionsLinks($htmlStr)
     {
+        $htmlStr = $this->prepareHtml($htmlStr);
+
+        if (extension_loaded("tidy")) {
+
+            // Установка конфигурации
+            $config = array(
+                'indent'       => true,
+                'output-xhtml' => true,
+                'wrap'         => 200);
+// Tidy
+            $tidy = new \tidy;
+            $tidy->parseString($htmlStr, $config, 'raw');
+            $tidy->cleanRepair();
+            $htmlStr = $tidy->body();
+        }
+
         $dom = $this->getDom($htmlStr);
         if (!$dom instanceof \simple_html_dom) {
             throw new \Exception("Error in get dom from string: " . htmlspecialchars($htmlStr));
         }
 
         $tables = $dom->find("table.content");
+        if (empty($tables)) {
+            throw new \Exception("Not fount table.content in dom");
+        }
         $table = count($tables) > 1 ? $tables[1] : $tables[0];
 
         $tableRows = $table->find("tr");
@@ -203,12 +225,26 @@ class Parser
         return false;
     }
 
-    public function getChildUlLi($dom)
+    public function getChildUlLi($dom, $li = null)
     {
         if (!$dom instanceof \simple_html_dom_node) {
             return null;
         }
-        $ul = $dom->find("ul", 0);
+        if ($li) {
+            $elements = $dom->children();
+            $i = 0;
+            while ($elements[$i] !== $li) {
+                $i++;
+            };
+
+            while ($elements[$i]->tag !== "ul") {
+                $i++;
+            }
+
+            $ul = $elements[$i];
+        } else {
+            $ul = $dom->find("ul", 0);
+        }
         if (!$ul) {
             return null;
         }
@@ -233,7 +269,13 @@ class Parser
             return [];
         }
 
-        $firstLiList = $ul->find("li");
+        $elements = $ul->children();
+        $firstLiList = [];
+        foreach($elements as $element) {
+            if ($element->tag === "li") {
+                $firstLiList[] = $element;
+            }
+        }
         if (!$firstLiList) {
             return [];
         }
@@ -253,22 +295,25 @@ class Parser
         }
         $firstUl = $liList["ul"];
         $liList = $liList["liList"];
+
         foreach ($liList as $firstLi) {
             $firstText = $firstLi->plaintext;
             switch ($firstText) {
                 case "Финансы, управленческий учет, мониторинг показателей":
-                    $secondNode = $this->getChildUlLi($firstUl);
+                    $secondNode = $this->getChildUlLi($firstUl, $firstLi);
                     $secondText = $secondNode ? $secondNode["text"] : null;
                     switch ($secondText) {
                         case "Учет бухгалтерский, налоговый, бюджетный, включая регламентированную отчетность":
-                            $thirdNode = $this->getChildUlLi($secondNode["ul"]);
+                            $thirdNode = $this->getChildUlLi($secondNode["ul"], $secondNode["li"]);
                             $thirdText = $thirdNode ? $thirdNode["text"] : null;
                             switch ($thirdText) {
                                 case "Бухгалтерский учет":
                                 case "Налоговый учет":
                                     $functions[] = "Бухгалтерский, налоговый учет";
+                                    break;
                                 case "Бюджетный учет (для бюджетных учреждений)":
                                     $functions[] = "Бюджетный учет";
+                                    break;
                             }
                             break;
                         case "Бюджетирование, финансовое планирование":
@@ -288,7 +333,7 @@ class Parser
                     $functions[] = "Кадровый учет и зарплата (HRM)";
                     break;
                 case "Управление продажами, логистикой и транспортом (SFM, WMS, TMS)":
-                    $secondNode = $this->getChildUlLi($firstUl);
+                    $secondNode = $this->getChildUlLi($firstUl, $firstLi);
                     $secondText = $secondNode ? $secondNode["text"] : null;
                     switch ($secondText) {
                         case "Склад и логистика":
@@ -310,16 +355,18 @@ class Parser
                     $functions[] = "Оптимизация бизнес-процессов";
                     break;
                 case "Различная отраслевая специфика":
-                    $secondNode = $this->getChildUlLi($firstUl);
+                    $secondNode = $this->getChildUlLi($firstUl, $firstLi);
                     $secondText = $secondNode ? $secondNode["text"] : null;
                     switch ($secondText) {
                         case "Строительство" :
                             $functions[] = "Отраслевой учет";
                             break;
+                        case "Производство, услуги" :
+                            $functions[] = "Управление производством (ERP)";
                     }
                     break;
                 case "Другое":
-                    $secondNode = $this->getChildUlLi($firstUl);
+                    $secondNode = $this->getChildUlLi($firstUl, $firstLi);
                     $secondText = $secondNode ? $secondNode["text"] : null;
                     switch ($secondText) {
                         case "Другое" :
@@ -328,7 +375,7 @@ class Parser
                     }
                     break;
                 case "Различная отраслевая специфика":
-                    $secondNode = $this->getChildUlLi($firstUl);
+                    $secondNode = $this->getChildUlLi($firstUl, $firstLi);
                     $secondText = $secondNode ? $secondNode["text"] : null;
                     switch ($secondText) {
                         case "Производство, услуги" :
@@ -339,6 +386,7 @@ class Parser
             }
         }
         $functions = array_unique($functions);
+        var_dump($functions);
         return $functions;
     }
 

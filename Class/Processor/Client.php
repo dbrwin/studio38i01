@@ -6,14 +6,21 @@
 namespace Processor;
 
 
-class Client 
+class Client
 {
+    static protected $types = [1, 2, 3, 4];
+
+    public static function getSupportedTypes()
+    {
+        return self::$types;
+    }
+
     public function getHttpResponse($url)
     {
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
         curl_setopt($ch, CURLOPT_TIMEOUT, 20);
-        curl_setopt($ch, CURLOPT_VERBOSE, 1);
+        curl_setopt($ch, CURLOPT_VERBOSE, 0);
         curl_setopt($ch, CURLOPT_NOBODY, 0);
         curl_setopt($ch, CURLOPT_HEADER, 0);
 //        curl_setopt($ch, CURLOPT_USERAGENT, $this->userAgent);
@@ -37,9 +44,21 @@ class Client
         return mb_convert_encoding($str, 'utf-8', 'windows-1251');;
     }
 
-    public function getSolutionsList($type=1, $page=1)
+    public function getSolutionsList($type = 1, $page = 1)
     {
-        $url = "http://www.1c.ru/rus/partners/solutions/solutions.jsp?PartID=985&v8only=1&cmk={$type}&isGroup=1&isNew=-1&parts={$page}";
+        $type = (integer)$type;
+        switch ($type) {
+            case 1:
+            case 2:
+                $typeReal = $type;
+                $url = "http://www.1c.ru/rus/partners/solutions/solutions.jsp?PartID=985&v8only=1&cmk={$typeReal}&isGroup=1&isNew=-1&parts={$page}";
+                break;
+            case 3:
+            case 4:
+                $typeReal = ($type === 3) ? 1 : 2;
+                $url = "http://www.1c.ru/rus/partners/solutions/solutions.jsp?archive=1&PartID=985&v8only=1&cmk={$typeReal}&isGroup=1&isNew=-1";
+                break;
+        }
         return $this->toUtf8($this->getHttpResponse($url));
     }
 
@@ -75,7 +94,7 @@ class Client
         if (is_null($name)) {
             $name = uniqid("38file-", true);
         }
-        $name = $name . "." .$ext;
+        $name = $name . "." . $ext;
         $path = $directory . "/" . $name;
         $file = $this->getHttpResponse($url);
         if (!$file) {
