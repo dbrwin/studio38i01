@@ -23,21 +23,28 @@ $types = Processor\Client::getSupportedTypes();
 $logStorage = new \Processor\Log\LogStorageMysql();
 $errorStorage = new \Processor\Log\ErrorStorageMysql();
 
+$scriptStartTime = new DateTime();
 
 foreach ($types as $type) {
+    echo "work on type: {$type}\n";
     do {
 //work on one page
         try {
             $logEntitys = $logStorage->find(["endTime" => null, "type" => $type], null, 1, null, ["startTime", "DESC"]);
             if (!empty($logEntitys)) {
+                /** @var \Processor\Log\LogEntity $logEntity */
                 $logEntity = reset($logEntitys);
                 $page = $logEntity->getPage() + 1;
+                $startTime = $logEntity->getStartTime();
+                echo "  continue session " . $startTime->format("d.m.Y h:i:s") .  PHP_EOL;
             } else {
                 $page = 1;
                 $logEntity = $logStorage->create();
                 $logEntity->setType($type);
+                $startTime = $logEntity->getStartTime();
+                echo "  start new session #" . $startTime->format("d.m.Y h:i:s") . PHP_EOL;
             }
-            echo "work on type: {$type} page: {$page} \n";
+            echo "    work on  page: {$page} \n";
 
             $client = new \Processor\Client();
             $raw = $client->getSolutionsList($type, $page);
@@ -50,14 +57,18 @@ foreach ($types as $type) {
             //work on link on page
             $storage = new \Processor\StorageMysql();
             foreach ($solutionsLinks as $num => $linkId) {
+                echo "      solution #{$linkId} => ";
                 $solution = $storage->findOne(["linkid" => (integer)$linkId]);
                 if ($solution) {
+                    echo "skip (already have) \n";
                     continue;
                 }
+                echo "get... ";
                 $solutionRaw = $client->getSolution($linkId);
                 if (!$solutionRaw) {
                     throw new Exception("Error in get solution #{$linkId}");
                 }
+                echo "parse... ";
                 $solution = $parser->parseSolution($solutionRaw);
                 $solution->setLinkid($linkId);
                 $solution->setGroup($type);
@@ -70,10 +81,12 @@ foreach ($types as $type) {
                         $solution->setReview($review);
                     }
                 }
+                echo "save... ";
                 $saveResult = $storage->save($solution);
                 if (!$saveResult) {
                     throw new \Exception("Not saved #{$linkId} g.{$type}");
                 }
+                echo " done \n";
             }
             //page done
             $logEntity->setPage($page);
@@ -95,7 +108,7 @@ foreach ($types as $type) {
             $log = new \Monolog\Logger("parser");
             $log->pushHandler(new \Monolog\Handler\StreamHandler(ROOT_DIR . '/data/log/parser.log', \Monolog\Logger::DEBUG));
             $message = "error #{$e->getCode()} in parsing [" . var_export($errorParams, true) . "] :: {$e->getMessage()} [{$e->getFile()}:{$e->getLine()}";
-            echo $message;
+            echo "\n" . $message . "\n";
             $log->error($message);
             /** @var \Processor\Log\ErrorEntity $error */
             $error = $errorStorage->create();
@@ -104,10 +117,13 @@ foreach ($types as $type) {
             $errorStorage->save($error);
         }
 //end work in one page
+        $diff = $startTime->diff(new DateTime())->format("%d days, %h hours, %i minuts, %s seconds");
+        echo "    time {$diff} \n";
     } while ($nextPage);
 }
 
+echo "Done All... \n";
 
-echo "Done...";
-
+$diff = $scriptStartTime->diff(new DateTime())->format("%d days, %h hours, %i minuts, %s seconds");
+echo "time to work {$diff} \n";
 
