@@ -225,6 +225,7 @@ class Parser
         return false;
     }
 
+    /** @deprecated */
     public function getChildUlLi($dom, $li = null)
     {
         if (!$dom instanceof \simple_html_dom_node) {
@@ -256,6 +257,44 @@ class Parser
             "ul"   => $ul,
             "li"   => $firstLi,
             "text" => $firstLi->plaintext,
+        ];
+    }
+
+    public function getChildUlLi2($dom, $li = null)
+    {
+        if (!$dom instanceof \simple_html_dom_node) {
+            return null;
+        }
+        if ($li) {
+            $elements = $dom->children();
+            $i = 0;
+            while ($elements[$i] !== $li) {
+                $i++;
+            };
+
+            while ($elements[$i]->tag !== "ul") {
+                $i++;
+            }
+
+            $ul = $elements[$i];
+        } else {
+            $ul = $dom->find("ul", 0);
+        }
+        if (!$ul) {
+            return null;
+        }
+
+        $lis = [];
+        $elements = $ul->children();
+        foreach($elements as $element) {
+            if ($element->tag === "li") {
+                $lis[] = $element;
+            }
+        }
+
+        return [
+            "ul"   => $ul,
+            "lis"   => $lis,
         ];
     }
 
@@ -300,27 +339,33 @@ class Parser
             $firstText = $firstLi->plaintext;
             switch ($firstText) {
                 case "Финансы, управленческий учет, мониторинг показателей":
-                    $secondNode = $this->getChildUlLi($firstUl, $firstLi);
-                    $secondText = $secondNode ? $secondNode["text"] : null;
-                    switch ($secondText) {
-                        case "Учет бухгалтерский, налоговый, бюджетный, включая регламентированную отчетность":
-                            $thirdNode = $this->getChildUlLi($secondNode["ul"], $secondNode["li"]);
-                            $thirdText = $thirdNode ? $thirdNode["text"] : null;
-                            switch ($thirdText) {
-                                case "Бухгалтерский учет":
-                                case "Налоговый учет":
-                                    $functions[] = "Бухгалтерский, налоговый учет";
-                                    break;
-                                case "Бюджетный учет (для бюджетных учреждений)":
-                                    $functions[] = "Бюджетный учет";
-                                    break;
-                            }
-                            break;
-                        case "Бюджетирование, финансовое планирование":
-                        case "Управленческий учет и расчет себестоимости методом ABC":
-                        case "Управленческий учет":
-                            $functions[] = "Управленческий учет и бюджетирование";
-                            break;
+                    $secondNode = $this->getChildUlLi2($firstUl, $firstLi);
+                    $lis = $secondNode["lis"];
+                    foreach($lis as $li) {
+                        $secondText = $li->plaintext;
+                        switch ($secondText) {
+                            case "Учет бухгалтерский, налоговый, бюджетный, включая регламентированную отчетность":
+                                $thirdNode = $this->getChildUlLi2($secondNode["ul"], $li);
+                                $lis = $thirdNode["lis"];
+                                foreach($lis as $li) {
+                                    $thirdText = $li->plaintext;
+                                    switch ($thirdText) {
+                                        case "Бухгалтерский учет":
+                                        case "Налоговый учет":
+                                            $functions[] = "Бухгалтерский, налоговый учет";
+                                            break;
+                                        case "Бюджетный учет (для бюджетных учреждений)":
+                                            $functions[] = "Бюджетный учет";
+                                            break;
+                                    }
+                                }
+                                break;
+                            case "Бюджетирование, финансовое планирование":
+                            case "Управленческий учет и расчет себестоимости методом ABC":
+                            case "Управленческий учет":
+                                $functions[] = "Управленческий учет и бюджетирование";
+                                break;
+                        }
                     }
                     break;
                 case "Учет по международным и национальным стандартам":
@@ -333,16 +378,19 @@ class Parser
                     $functions[] = "Кадровый учет и зарплата (HRM)";
                     break;
                 case "Управление продажами, логистикой и транспортом (SFM, WMS, TMS)":
-                    $secondNode = $this->getChildUlLi($firstUl, $firstLi);
-                    $secondText = $secondNode ? $secondNode["text"] : null;
-                    switch ($secondText) {
-                        case "Склад и логистика":
-                        case "Транспорт":
-                            $functions[] = "Управление логистикой и транспортом";
-                            break;
-                        case "Продажи (сбыт), сервис, маркетинг":
-                            $functions[] = "Управление продажами и отношениями с клиентами (CRM)";
-                            break;
+                    $secondNode = $this->getChildUlLi2($firstUl, $firstLi);
+                    $lis = $secondNode["lis"];
+                    foreach($lis as $li) {
+                        $secondText = $li->plaintext;
+                        switch ($secondText) {
+                            case "Склад и логистика":
+                            case "Транспорт":
+                                $functions[] = "Управление логистикой и транспортом";
+                                break;
+                            case "Продажи (сбыт), сервис, маркетинг":
+                                $functions[] = "Управление продажами и отношениями с клиентами (CRM)";
+                                break;
+                        }
                     }
                     break;
                 case "Закупки (снабжение) и управление отношениями с поставщиками":
@@ -355,38 +403,46 @@ class Parser
                     $functions[] = "Оптимизация бизнес-процессов";
                     break;
                 case "Различная отраслевая специфика":
-                    $secondNode = $this->getChildUlLi($firstUl, $firstLi);
-                    $secondText = $secondNode ? $secondNode["text"] : null;
-                    switch ($secondText) {
-                        case "Строительство" :
-                            $functions[] = "Отраслевой учет";
-                            break;
-                        case "Производство, услуги" :
-                            $functions[] = "Управление производством (ERP)";
+                    $secondNode = $this->getChildUlLi2($firstUl, $firstLi);
+                    $lis = $secondNode["lis"];
+                    foreach($lis as $li) {
+                        $secondText = $li->plaintext;
+                        switch ($secondText) {
+                            case "Строительство" :
+                                $functions[] = "Отраслевой учет";
+                                break;
+                            case "Производство, услуги" :
+                                $functions[] = "Управление производством (ERP)";
+                        }
                     }
                     break;
                 case "Другое":
-                    $secondNode = $this->getChildUlLi($firstUl, $firstLi);
-                    $secondText = $secondNode ? $secondNode["text"] : null;
-                    switch ($secondText) {
-                        case "Другое" :
-                            $functions[] = "Отраслевой учет";
-                            break;
+                    $secondNode = $this->getChildUlLi2($firstUl, $firstLi);
+                    $lis = $secondNode["lis"];
+                    foreach($lis as $li) {
+                        $secondText = $li->plaintext;
+                        switch ($secondText) {
+                            case "Другое" :
+                                $functions[] = "Отраслевой учет";
+                                break;
+                        }
                     }
                     break;
                 case "Различная отраслевая специфика":
-                    $secondNode = $this->getChildUlLi($firstUl, $firstLi);
-                    $secondText = $secondNode ? $secondNode["text"] : null;
-                    switch ($secondText) {
-                        case "Производство, услуги" :
-                            $functions[] = "Управление производством (ERP)";
-                            break;
+                    $secondNode = $this->getChildUlLi2($firstUl, $firstLi);
+                    $lis = $secondNode["lis"];
+                    foreach($lis as $li) {
+                        $secondText = $li->plaintext;
+                        switch ($secondText) {
+                            case "Производство, услуги" :
+                                $functions[] = "Управление производством (ERP)";
+                                break;
+                        }
                     }
                     break;
             }
         }
         $functions = array_unique($functions);
-        var_dump($functions);
         return $functions;
     }
 

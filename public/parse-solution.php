@@ -58,10 +58,7 @@ try {
             $solution->setReview($review);
         }
     }
-    $saveResult = $storage->save($solution);
-    if (!$saveResult) {
-        throw new \Exception("Not saved #{$linkId} g.{$type}");
-    }
+
 } catch (\Exception $e) {
     $errorParams = [
         "type" => $type,
@@ -79,7 +76,9 @@ try {
     $log->error($message);
     /** @var \Processor\Log\ErrorEntity $error */
 }
-//end work in one page
+
+
+var_dump($solution);
 
 
 echo "Done...";
