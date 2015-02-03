@@ -94,7 +94,9 @@ foreach ($types as $type) {
 
             $log = new \Monolog\Logger("parser");
             $log->pushHandler(new \Monolog\Handler\StreamHandler(ROOT_DIR . '/data/log/parser.log', \Monolog\Logger::DEBUG));
-            $log->error("error #{$e->getCode()} in parsing [" . var_export($errorParams, true) . "] :: {$e->getMessage()} [{$e->getFile()}:{$e->getLine()}");
+            $message = "error #{$e->getCode()} in parsing [" . var_export($errorParams, true) . "] :: {$e->getMessage()} [{$e->getFile()}:{$e->getLine()}";
+            echo $message;
+            $log->error($message);
             /** @var \Processor\Log\ErrorEntity $error */
             $error = $errorStorage->create();
             $error->loadFromException($e);

@@ -63,10 +63,11 @@ try {
 
     $log = new \Monolog\Logger("parser");
     $log->pushHandler(new \Monolog\Handler\StreamHandler(ROOT_DIR . '/data/log/parser.log', \Monolog\Logger::DEBUG));
-    $log->error("error #{$e->getCode()} in parsing solution #{$linkId} :: {$e->getMessage()} [{$e->getFile()}:{$e->getLine()}");
+    $message = "error #{$e->getCode()} in parsing [" . var_export($errorParams, true) . "] :: {$e->getMessage()} [{$e->getFile()}:{$e->getLine()}";
+    $log->error($message);
     header("Location: /parser.php?t={$type}&p={$page}");
     echo "<h1>Error</h1> \n";
-    var_dump($e);
+    echo $message;
 }
 
 $view = new \Processor\View();
