@@ -25,6 +25,8 @@ $errorStorage = new \Processor\Log\ErrorStorageMysql();
 
 $scriptStartTime = new DateTime();
 
+$errorsCount = 0;
+
 foreach ($types as $type) {
     echo "work on type: {$type}\n";
     do {
@@ -115,6 +117,7 @@ foreach ($types as $type) {
             $error->loadFromException($e);
             $error->setParams($errorParams);
             $errorStorage->save($error);
+            $errorsCount++;
         }
 //end work in one page
         $diff = $startTime->diff(new DateTime())->format("%d days, %h hours, %i minuts, %s seconds");
@@ -123,6 +126,10 @@ foreach ($types as $type) {
 }
 
 echo "Done All... \n";
+
+if ($errorsCount) {
+    echo "Errors: {$errorsCount} \n";
+}
 
 $diff = $scriptStartTime->diff(new DateTime())->format("%d days, %h hours, %i minuts, %s seconds");
 echo "time to work {$diff} \n";

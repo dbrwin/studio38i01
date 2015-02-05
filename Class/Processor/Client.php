@@ -8,7 +8,7 @@ namespace Processor;
 
 class Client
 {
-    static protected $types = [1, 2, 3, 4];
+    static protected $types = [1, 2, 3, 4, 5, 6];
 
     public static function getSupportedTypes()
     {
@@ -57,6 +57,12 @@ class Client
             case 4:
                 $typeReal = ($type === 3) ? 1 : 2;
                 $url = "http://www.1c.ru/rus/partners/solutions/solutions.jsp?archive=1&PartID=985&v8only=1&cmk={$typeReal}&isGroup=1&isNew=-1";
+                break;
+            case 5:
+                $url = "http://www.1c.ru/rus/partners/solutions/solutions.jsp?PartID=4619&v8only=1&cmk=1&isGroup=1&isNew=-1&parts={$page}";
+                break;
+            case 6:
+                $url = "http://www.1c.ru/rus/partners/solutions/solutions.jsp?archive=1&PartID=4619&v8only=1&cmk=1&isGroup=1&isNew=-1&parts={$page}";
                 break;
         }
         return $this->toUtf8($this->getHttpResponse($url));
